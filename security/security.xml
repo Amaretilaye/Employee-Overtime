@@ -1,0 +1,93 @@
+<odoo>
+    <data>
+
+      <record id="module_category_pb_overtime" model="ir.module.category">
+            <field name="name">PB Overtime</field>
+            <field name="description">Category for PB Overtime</field>
+            <field name="sequence">10</field>
+        </record>
+
+        <record id="group_name_submit" model="res.groups">
+            <field name="name">User</field>
+            <field name="category_id" ref="pb_overtime.module_category_pb_overtime"/>
+        </record>
+
+        <record id="group_name_dept_approve" model="res.groups">
+            <field name="name">Division</field>
+            <field name="category_id" ref="pb_overtime.module_category_pb_overtime"/>
+        </record>
+
+        <record id="group_name_hr" model="res.groups">
+            <field name="name">Department Manager</field>
+            <field name="category_id" ref="pb_overtime.module_category_pb_overtime"/>
+        </record>
+        <record id="group_name_in_payment" model="res.groups">
+            <field name="name">Authorizer </field>
+            <field name="category_id" ref="pb_overtime.module_category_pb_overtime"/>
+        </record>
+    </data>
+
+
+
+<!--    recored rule -->
+
+
+<record id="overtime_calculator_division_rule" model="ir.rule">
+    <field name="name">Overtime Division Rule</field>
+    <field name="model_id" ref="model_overtime_calculator"/>
+    <field name="groups" eval="[(4, ref('pb_overtime.group_name_dept_approve'))]"/>
+    <field name="domain_force">[
+        '|',
+        ('employee_id', '=', user.employee_ids.id),
+        ('division_id', 'in', [d.id for d in user.employee_ids.mapped('division_id')])
+    ]</field>
+    <field name="perm_read" eval="True"/>
+    <field name="perm_write" eval="False"/>
+    <field name="perm_create" eval="False"/>
+    <field name="perm_unlink" eval="False"/>
+</record>
+
+
+        <!-- Rule for Department Managers: can see and edit all requests in their department -->
+        <record id="overtime_calculator_department_manager_rule" model="ir.rule">
+            <field name="name">Overtime Department Manager Rule</field>
+            <field name="model_id" ref="model_overtime_calculator"/>
+            <field name="groups" eval="[(4, ref('pb_overtime.group_name_hr'))]"/>
+                <field name="domain_force">[
+            '|',
+             ('employee_id', '=', user.employee_ids.id),
+             ('company_id', 'in', [d.id for d in user.employee_ids.mapped('company_id')])
+         ]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <record id="overtime_calculator_authorizer_rule" model="ir.rule">
+            <field name="name">Overtime Calculator Authorizer Rule</field>
+            <field name="model_id" ref="model_overtime_calculator"/>
+            <field name="groups" eval="[(4, ref('group_name_in_payment'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <record id="overtime_calculator_user_rule" model="ir.rule">
+            <field name="name">Overtime Calculator User Rule</field>
+            <field name="model_id" ref="model_overtime_calculator"/>
+            <field name="groups" eval="[(4, ref('group_name_submit'))]"/>
+            <field name="domain_force">[('user_id', '=', user.id)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+</odoo>
+
+
+
+
