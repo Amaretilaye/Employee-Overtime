@@ -11,7 +11,7 @@
         'base_setup',
         'hr_contract',
         'om_hr_payroll',
-        'hr_pb',
+
 
     ],
 
