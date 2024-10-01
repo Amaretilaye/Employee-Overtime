@@ -4,6 +4,7 @@
     'summary': 'employee overtime in odoo based on working hour and over time type it is configerable by any company rule',
     'description': """this module requires odoo mate payroll module """,
     'category': '',
+    'aouther':'Amare Tilaye,
     'website': '',
     'depends': [
         'hr',
